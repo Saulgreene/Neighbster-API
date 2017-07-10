@@ -23,6 +23,7 @@
       "modules": true,
       "impliedStrict": true,
       "experimentalObjectRestSpread": true,
+      "Promise": true,
     }
   },
   "extends": "eslint:recommended"
