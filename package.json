@@ -1,5 +1,5 @@
 {
-  "name": "temp-neighbster",
+  "name": "Neighbster-API",
   "version": "1.0.0",
   "description": "A backend application (API) that will allow people to create an account and share items with one another by checking them out.",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "nyc mocha",
     "start": "node index.js",
-    "start-db": "",
+    "start-db": "mkdir -p ./db && mongod --dbpath ./db",
     "stop-db": "killall mongod",
     "lint": "eslint ."
   },
