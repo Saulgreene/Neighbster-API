@@ -18,6 +18,7 @@ describe('testing server', () => {
         .then(res => {throw res;})
         .catch(res => {
           console.log('res.body', res.body);
+          console.log('res.status', res.status);
           expect(res.status).toEqual(404);
         });
     });
