@@ -17,8 +17,6 @@ describe('testing server', () => {
       return superagent.get(`${API_URL}/api/not-a-route`)
         .then(res => {throw res;})
         .catch(res => {
-          console.log('res.body', res.body);
-          console.log('res.status', res.status);
           expect(res.status).toEqual(404);
         });
     });
