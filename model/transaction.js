@@ -3,12 +3,11 @@
 const mongoose = require('mongoose');
 
 const transactionSchema = mongoose.Schema({
-
-  toolID: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'tool'},
-  toolOwner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user'},
-  personRequesting: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user'},
-  startDate: {type: Date},
-  endDate: {type: Date},
+  borrowerId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user'},
+  toolId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'tool'},
+  startDate: {type: Date, required: true},
+  endDate: {type: Date, required: true},
+  transactionDate: {type: Date, required: true},
 });
 
 module.exports = mongoose.model('transaction', transactionSchema);
