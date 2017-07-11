@@ -52,18 +52,18 @@ describe('Testing User model', () => {
     });
     it('should respond with a 409 if username already exists', () => {
       return mockUser.createOne()
-      .then(userData => {
-        return userData.user.save();
-      })
-      .then(user => {
-        let tempUser = user;
-        return superagent.post(`${API_URL}/api/signup`)
-        .send({
-          username: tempUser.username,
-          password: 'secret2',
-          email: 'test2@email.com',
-        });
-      })
+        .then(userData => {
+          return userData.user.save();
+        })
+        .then(user => {
+          let tempUser = user;
+          return superagent.post(`${API_URL}/api/signup`)
+            .send({
+              username: tempUser.username,
+              password: 'secret2',
+              email: 'test2@email.com',
+            });
+        })
         .then(res => {throw res;})
         .catch(err => {
           expect(err.response.status).toEqual(409);
