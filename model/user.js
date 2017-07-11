@@ -1,5 +1,4 @@
 'use strict';
-
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -22,7 +21,6 @@ userSchema.methods.passwordHashCreate = function(password){
 };
 
 userSchema.methods.passwordHashCompare = function(password){
-  console.log('passwordHashCompare', password);
   return bcrypt.compare(password, this.passwordHash)
     .then(isCorrect => {
       if(isCorrect)
@@ -40,6 +38,8 @@ userSchema.methods.tokenSeedCreate = function(){
       this.save()
         .then(() => resolve(this))
         .catch(err => {
+          if(!err.message.includes(this.tokenSeed))
+            return reject(err);
           if(tries < 1)
             return reject(new Error('server failed to create tokenSeed'));
           tries--;
@@ -63,6 +63,7 @@ const User = module.exports = mongoose.model('user', userSchema);
 User.create = function(data){
   let password = data.password;
   delete data.password;
-  return new User(data).passwordHashCreate(password)
+  return new User(data)
+    .passwordHashCreate(password)
     .then(user => user.tokenCreate());
 };

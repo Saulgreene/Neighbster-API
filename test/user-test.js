@@ -6,8 +6,9 @@ const expect = require('expect');
 const superagent = require('superagent');
 const server = require('../lib/server.js');
 
-const clearDB = require('./lib/clear-db.js');
 const API_URL = process.env.API_URL;
+const clearDB = require('./lib/clear-db.js');
+const mockUser = require('./lib/mock-user.js');
 
 describe('Testing User model', () => {
 
@@ -26,7 +27,6 @@ describe('Testing User model', () => {
       return superagent.post(`${API_URL}/api/signup`)
         .send(data)
         .then(res => {
-          console.log('res.text', res.text);
           expect(res.status).toEqual(200);
           expect(res.text).toExist();
           expect(res.text.length > 1).toBeTruthy();
@@ -39,7 +39,7 @@ describe('Testing User model', () => {
           expect(res.status).toEqual(400);
         });
     });
-    it('should respond with a 401 if invalid body', () => {
+    it('should respond with a 400 if invalid body', () => {
       return superagent.post(`${API_URL}/api/signup`)
         .send({
           username: '',
@@ -47,18 +47,26 @@ describe('Testing User model', () => {
           password: '',
         })
         .catch(res => {
-          expect(res.status).toEqual(401);
+          expect(res.status).toEqual(400);
         });
     });
     it('should respond with a 409 if username already exists', () => {
-      return superagent.post(`${API_URL}/api/signup`)
-        .send(data);
-      return superagent.post(`${API_URL}/api/signup`)
-        .send(data)
+      return mockUser.createOne()
+      .then(userData => {
+        return userData.user.save();
+      })
+      .then(user => {
+        let tempUser = user;
+        return superagent.post(`${API_URL}/api/signup`)
+        .send({
+          username: tempUser.username,
+          password: 'secret2',
+          email: 'test2@email.com',
+        });
+      })
         .then(res => {throw res;})
-        .catch(res => {
-          console.log('res.body', res.body);
-          expect(res.status).toEqual(409);
+        .catch(err => {
+          expect(err.response.status).toEqual(409);
         });
     });
   });
