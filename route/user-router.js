@@ -21,3 +21,10 @@ userRouter.post('/api/signup', jsonParser, (req, res, next) => {
       res.send(token);})
     .catch(next);
 });
+
+userRouter.get('/api/signin', basicAuth, (req, res, next) => {
+  console.log('Hit GET /api/signin');
+  req.user.tokenCreate()
+    .then(token => res.send(token))
+    .catch(next);
+});

@@ -70,4 +70,32 @@ describe('Testing User model', () => {
         });
     });
   });
+  describe('Testing GET /api/signin', () => {
+    it('should return a token and a 200 status', () => {
+      let tempUser;
+      return mockUser.createOne()
+        .then(userData => {
+          tempUser = userData.user;
+          let encoded = new Buffer(`${tempUser.username}:${userData.password}`).toString('base64');
+          return superagent.get(`${API_URL}/api/signin`).set('Authorization', `Basic ${encoded}`);
+        })
+        .then(res => {
+          expect(res.status).toEqual(200);
+          expect(res.text).toExist();
+          expect(res.text.length > 1).toBeTruthy();
+        });
+    });
+    it('should respond with a status 401 for improperly formatted request', () => {
+      let tempUser;
+      return mockUser.createOne()
+        .then(userData => {
+          tempUser = userData.user;
+          let encoded = new Buffer(`${tempUser.username}:${userData.password}`).toString('base64');
+          return superagent.get(`${API_URL}/api/signin`);
+        })
+        .catch(res => {
+          expect(res.status).toEqual(401);
+        });
+    });
+  });
 }); // close final describe block
