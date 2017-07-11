@@ -32,5 +32,23 @@ describe('Testing User model', () => {
         expect(res.text.length > 1).toBeTruthy();
       });
     });
+    it('should respond with a 400 if no body provided', () => {
+      return superagent.post(`${API_URL}/api/signup`)
+      .send({})
+      .catch(res => {
+        expect(res.status).toEqual(400);
+      });
+    });
+    it('should respond with a 401 if invalid body', () => {
+      return superagent.post(`${API_URL}/api/signup`)
+      .send({
+        username: '',
+        email: '',
+        password: '',
+      })
+      .catch(res => {
+        expect(res.status).toEqual(401);
+      });
+    });
   });
 }); // close final describe block
