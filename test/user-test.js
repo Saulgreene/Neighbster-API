@@ -24,31 +24,31 @@ describe('Testing User model', () => {
   describe('Testing POST', () => {
     it('should return a token and a 200 status', () => {
       return superagent.post(`${API_URL}/api/signup`)
-      .send(data)
-      .then(res => {
-        console.log('res.text', res.text);
-        expect(res.status).toEqual(200);
-        expect(res.text).toExist();
-        expect(res.text.length > 1).toBeTruthy();
-      });
+        .send(data)
+        .then(res => {
+          console.log('res.text', res.text);
+          expect(res.status).toEqual(200);
+          expect(res.text).toExist();
+          expect(res.text.length > 1).toBeTruthy();
+        });
     });
     it('should respond with a 400 if no body provided', () => {
       return superagent.post(`${API_URL}/api/signup`)
-      .send({})
-      .catch(res => {
-        expect(res.status).toEqual(400);
-      });
+        .send({})
+        .catch(res => {
+          expect(res.status).toEqual(400);
+        });
     });
     it('should respond with a 401 if invalid body', () => {
       return superagent.post(`${API_URL}/api/signup`)
-      .send({
-        username: '',
-        email: '',
-        password: '',
-      })
-      .catch(res => {
-        expect(res.status).toEqual(401);
-      });
+        .send({
+          username: '',
+          email: '',
+          password: '',
+        })
+        .catch(res => {
+          expect(res.status).toEqual(401);
+        });
     });
   });
 }); // close final describe block
