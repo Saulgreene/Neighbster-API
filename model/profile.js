@@ -1,14 +1,14 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const User = require('./user.js');
+// const User = require('./user.js');
 
 const profileSchema = mongoose.Schema({
   address: {type: String, required: true},
   phone: {type: String, required: true},
   realName: {type: String, required: true},
   picURI: {type: String, required: true},
-  userId: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
+  userId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user'},
 });
 
 // profileSchema.pre('save',function(next) {
