@@ -15,9 +15,9 @@ profileSchema.pre('save',function(next) {
   console.log('pre save doc', this);
   User.findById(this.user)
     .then(user => {
-      let assignmentIDSet = new Set(user.profile);
+      let profileIDSet = new Set(user.profile);
       profileIDSet.add(this._id);
-      user.assignments = Array.from(profileIDSet);
+      user.profile = Array.from(profileIDSet);
       return user.save();
     })
     .then(() => next())
