@@ -50,5 +50,16 @@ describe('Testing User model', () => {
           expect(res.status).toEqual(401);
         });
     });
+    it('should respond with a 409 if username already exists', () => {
+      return superagent.post(`${API_URL}/api/signup`)
+        .send(data);
+      return superagent.post(`${API_URL}/api/signup`)
+        .send(data)
+        .then(res => {throw res;})
+        .catch(res => {
+          console.log('res.body', res.body);
+          expect(res.status).toEqual(409);
+        });
+    });
   });
 }); // close final describe block
