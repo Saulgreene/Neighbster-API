@@ -20,3 +20,10 @@ profileRouter.post('/api/profile', jsonParser, (req, res, next) => {
       res.send(profile);})
     .catch(next);
 });
+
+profileRouter.get('/api/profile/:id', jsonParser, (req, res, next) => {
+  console.log('Hit GET /api/profile');
+  return Profile.findById(req.params.id)
+    .then(profile => res.json(profile))
+    .catch(next);
+});

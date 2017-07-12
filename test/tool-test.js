@@ -25,7 +25,7 @@ describe('Testing Tool model', () => {
   afterEach(clearDB);
 
   describe('Testing POST', () => {
-    it.only('should return a tool and a 200 status', () => {
+    it('should return a tool and a 200 status', () => {
       return superagent.post(`${API_URL}/api/tools`)
         .send({
           ownerId: tempUser.user._id,
