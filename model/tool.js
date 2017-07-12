@@ -10,6 +10,7 @@ const toolSchema = mongoose.Schema({
   toolInstructions: {type: String},
   picURI: {type: String},
   category: {type: String, required: true},
+  isCheckedOut: {type: Boolean, default: false},
 });
 
 module.exports = mongoose.model('tool', toolSchema);
