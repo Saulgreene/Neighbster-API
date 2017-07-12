@@ -18,7 +18,7 @@ toolRouter.post('/api/tools', bearerAuth, s3Upload('image'), (req, res, next) =>
   console.log('Hit POST /api/tools');
 
   new Tool({
-    ownerId: req.body.user._id.toString(),
+    ownerId: req.user._id.toString(),
     serialNumber: req.body.serialNumber,
     toolName: req.body.toolName,
     toolDescription: req.body.toolDescription,

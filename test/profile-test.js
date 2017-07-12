@@ -1,6 +1,8 @@
 'use strict';
 
-require('dotenv').config({path: `${__dirname}/../.test.env`});
+const path = require('path');
+
+require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
 
 const expect = require('expect');
 const superagent = require('superagent');
