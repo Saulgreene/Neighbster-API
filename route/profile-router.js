@@ -27,3 +27,21 @@ profileRouter.get('/api/profile/:id', jsonParser, (req, res, next) => {
     .then(profile => res.json(profile))
     .catch(next);
 });
+
+profileRouter.delete('/api/profile/:id', (req, res, next) => {
+  console.log('Hit DELETE /api/profile');
+  Profile.findByIdAndRemove(req.params.id)
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
+
+profileRouter.put('/api/profile/:id', (req, res, next) => {
+  console.log('Hit PUT /api/profile');
+  let options ={
+    runValidators: true,
+    new: true,
+  };
+  return Profile.findByIdAndUpdate(req.params.id, req.body, options)
+    .then(profile => res.json(profile))
+    .catch(next);
+});

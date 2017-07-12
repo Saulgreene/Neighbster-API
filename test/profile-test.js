@@ -63,6 +63,75 @@ describe('Testing Profile Model', () =>{
           expect(res.status).toEqual(404);
         });
     });
+  });//end of GET describe block
+
+  describe('Testing DELETE', () => {
+    it('should delete a profile and return status 204', () => {
+      console.log(tempUserData);
+      // return superagent.post(`${API_URL}/api/profile`)
+      //   .send({
+      //     address: '6208 57th ave south seattle WA 98118',
+      //     phone: '2533978733',
+      //     realName: 'Saul Greene',
+      //     picURI: 'some pic URI string',
+      //     userId: tempUserData._id,
+      //   });
+      return superagent.delete(`${API_URL}/api/profile/${tempUserData._id}`)
+        .then( res => {
+          expect(res.status).toEqual(204);
+        });
+    });
+    it('should return status 404', () => {
+      return superagent.delete(`${API_URL}/api/profile/69843`)
+        .catch( res => {
+          expect(res.status).toEqual(404);
+        });
+    });
+  });//end of DELETE describe block
+
+  describe('Testing PUT', () => {
+    it('should respond with a 200 and modify the selected profile', () => {
+      // return superagent.post(`${API_URL}/api/profile`)
+      //   .send({
+      //     address: '6208 57th ave south seattle WA 98118',
+      //     phone: '2533978733',
+      //     realName: 'Saul Greene',
+      //     picURI: 'some pic URI string',
+      //     userId: tempUserData._id,
+      //   });
+      return superagent.put(`${API_URL}/api/profile/${tempUserData._id}`)
+        .send({
+          realName: 'Josh Farber',
+        })
+        .then(res =>{
+          expect(res.status).toEqual(200);
+          console.log(res.body);
+        });
+    });
   });
 
-}); //end of describe block
+}); //end of describe block 200, 400, 404
+
+// describe('testing PUT /api/student/:id', () => {
+//     let tempStudent = mockStudent.createOne();
+//     it('should respond status 200', () =>{
+//       return superagent.put(`${process.env.API_URL}/api/student/${tempStudent._id}`)
+//       .send({name: 'enrique'})
+//       .then(res => {
+//         expect(res.status).toEqual(200);
+//       });
+//     });
+//     it('should respond status 400', () =>{
+//       return superagent.put(`${process.env.API_URL}/api/student/${tempStudent._id}`)
+//       .send({})
+//       .catch((res)=> {
+//         expect(res.status).toEqual(400);
+//       });
+//     });
+//     it('should respond status 404', () =>{
+//       return superagent.put(`${process.env.API_URL}/api/student/9344`)
+//       .catch((res)=> {
+//         expect(res.status).toEqual(404);
+//       });
+//     });
+//   });
