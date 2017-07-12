@@ -22,12 +22,12 @@ describe('Testing Transaction router', () => {
         tempTransaction = transactionData;
       });
   });
-
   afterEach(clearDB);
-  console.log('tempTransaction', tempTransaction);
+
+  // console.log('tempTransaction', tempTransaction);
 
   describe('Testing POST', () => {
-    it.only('should return a transaction and a 200 status', () => {
+    it('should return a transaction and a 200 status', () => {
       return superagent.post(`${API_URL}/api/transactions`)
         .send({
           borrowerId: tempTransaction.borrower._id,
@@ -38,6 +38,22 @@ describe('Testing Transaction router', () => {
         })
         .then(res => {
           expect(res.status).toEqual(200);
+          expect(res.body.borrowerId).toEqual(tempTransaction.borrower._id);
+          expect(res.body.toolId).toEqual(tempTransaction.tool._id);
+          expect(res.body.startDate).toExist();
+          expect(res.body.endDate).toExist();
+          expect(res.body.transactionDate).toExist();
+        });
+    });
+  });
+  describe('Testing GET', () => {
+    it('should return a transaction and a 200 status', () => {
+      console.log('tempTransaction.transaction._id', tempTransaction.transaction._id);
+      return superagent.get(`${API_URL}/api/transactions${tempTransaction.transaction._id}`)
+        .then(res => {
+          console.log('get route', tempTransaction.transaction._id );
+          expect(res.status).toEqual(200);
+          expect(res.body._id).toEqual(tempTransaction.transaction._id);
           expect(res.body.borrowerId).toEqual(tempTransaction.borrower._id);
           expect(res.body.toolId).toEqual(tempTransaction.tool._id);
           expect(res.body.startDate).toExist();

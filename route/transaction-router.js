@@ -18,3 +18,20 @@ transactionRouter.post('/api/transactions', jsonParser, (req, res, next) => {
     .then(transaction => res.json(transaction))
     .catch(next);
 });
+
+transactionRouter.get('/api/transactions:id', (req, res, next) => {
+  console.log('Hit GET /api/transactions/:id');
+
+  Transaction.findById(req.params.id)
+  .then(transaction => res.json(transaction))
+  .catch(next);
+
+});
+
+// shipRouter.get('/api/ships:id', (req, res, next) => {
+//   console.log('hit GET /api/ships/:id');
+//
+//   Ship.findById(req.params.id)
+//   .then(ship => res.json(ship))
+//   .catch(next);
+// });

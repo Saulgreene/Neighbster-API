@@ -8,7 +8,6 @@ const Transaction = require('../../model/transaction.js');
 const mockTransaction = module.exports = {};
 
 mockTransaction.createOne = () => {
-  console.log('inside mockTransaction.createOne');
   let result = {};
   return mockUser.createOne()
     .then(borrowerData => {
@@ -29,6 +28,7 @@ mockTransaction.createOne = () => {
         })
         .then(transaction => {
           result.transaction = transaction;
+          console.log('result after transaction', result);
           return result;
         });
           // console.log('result after mockTool.createOne()', result);
