@@ -5,6 +5,7 @@ const {Router} = require('express');
 const jsonParser = require('body-parser').json();
 
 // app modules
+const bearerAuth = require('../lib/bearer-auth-middleware.js');
 const Transaction = require('../model/transaction.js');
 
 // module logic
