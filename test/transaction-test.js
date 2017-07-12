@@ -12,14 +12,14 @@ const mockTransaction = require('./lib/mock-transaction.js');
 
 describe('Testing Transaction router', () => {
 
-  let tempTransaction;
+  let tempUserData;
 
   before(server.start);
   after(server.stop);
   beforeEach('create mockTransaction', () => {
     return mockTransaction.createOne()
       .then(transactionData => {
-        tempTransaction = transactionData;
+        tempUserData = transactionData;
       });
   });
   afterEach(clearDB);
@@ -27,19 +27,20 @@ describe('Testing Transaction router', () => {
 
   describe('Testing POST', () => {
     it('should return a transaction and a 200 status', () => {
-      console.log('tempTransaction', tempTransaction);
+      // console.log('tempUserData', tempUserData);
       return superagent.post(`${API_URL}/api/transactions`)
+      // .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
-          borrowerId: tempTransaction.borrower._id,
-          toolId: tempTransaction.tool._id,
+          borrowerId: tempUserData.borrower._id,
+          toolId: tempUserData.tool._id,
           startDate: Date.now(),
           endDate: Date.now(),
           transactionDate: Date.now(),
         })
         .then(res => {
           expect(res.status).toEqual(200);
-          expect(res.body.borrowerId).toEqual(tempTransaction.borrower._id);
-          expect(res.body.toolId).toEqual(tempTransaction.tool._id);
+          expect(res.body.borrowerId).toEqual(tempUserData.borrower._id);
+          expect(res.body.toolId).toEqual(tempUserData.tool._id);
           expect(res.body.startDate).toExist();
           expect(res.body.endDate).toExist();
           expect(res.body.transactionDate).toExist();
@@ -47,9 +48,10 @@ describe('Testing Transaction router', () => {
     });
     it('should respod with a 400 status', () => {
       return superagent.post(`${API_URL}/api/transactions`)
+        // .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           borrowerId: '29vmango37dkd27jf',
-          toolId: tempTransaction.tool._id,
+          toolId: tempUserData.tool._id,
           startDate: Date.now(),
           endDate: Date.now(),
           transactionDate: Date.now(),
@@ -60,7 +62,8 @@ describe('Testing Transaction router', () => {
     });
     it('should respod with a 409 status', () => {
       return superagent.post(`${API_URL}/api/transactions`)
-        .send(tempTransaction.transaction)
+        // .set('Authorization', `Bearer ${tempUserData.token}`)
+        .send(tempUserData.transaction)
         .catch(res => {
           expect(res.status).toEqual(409);
         });
@@ -68,14 +71,14 @@ describe('Testing Transaction router', () => {
   });
   describe('Testing GET', () => {
     it('should return a transaction and a 200 status', () => {
-      // console.log('tempTransaction.transaction._id', tempTransaction.transaction._id);
-      return superagent.get(`${API_URL}/api/transactions${tempTransaction.transaction._id}`)
+      // console.log('tempUserData.transaction._id', tempUserData.transaction._id);
+      return superagent.get(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
         .then(res => {
-          // console.log('get route', tempTransaction.transaction._id );
+          // console.log('get route', tempUserData.transaction._id );
           expect(res.status).toEqual(200);
-          expect(res.body._id).toEqual(tempTransaction.transaction._id);
-          expect(res.body.borrowerId).toEqual(tempTransaction.borrower._id);
-          expect(res.body.toolId).toEqual(tempTransaction.tool._id);
+          expect(res.body._id).toEqual(tempUserData.transaction._id);
+          expect(res.body.borrowerId).toEqual(tempUserData.borrower._id);
+          expect(res.body.toolId).toEqual(tempUserData.tool._id);
           expect(res.body.startDate).toExist();
           expect(res.body.endDate).toExist();
           expect(res.body.transactionDate).toExist();
@@ -87,5 +90,31 @@ describe('Testing Transaction router', () => {
           expect(res.status).toEqual(404);
         });
     });
+  });
+  describe('Testing PUT', () => {
+    it.only('should return a transaction and a 200 status', () => {
+      // console.log('tempUserData.transaction._id', tempUserData.transaction._id);
+      return superagent.put(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
+        .send({
+          transactionDate: Date.now(),
+        })
+        .then(res => {
+          console.log('tempUserData.transaction.transactionDate', tempUserData.transaction.transactionDate);
+          console.log('res.body', res.body);
+          expect(res.status).toEqual(200);
+          expect(res.body.endDate).toExist();
+          expect(res.body.startDate).toExist();
+          expect(res.body.toolId).toEqual(tempUserData.tool._id);
+          expect(res.body._id).toEqual(tempUserData.transaction._id);
+          expect(res.body.borrowerId).toEqual(tempUserData.borrower._id);
+          expect(res.body.transactionDate !== tempUserData.transaction.transactionDate).toBeTruthy();
+        });
+    });
+    // it('should respond with a 404 not found', () => {
+    //   return superagent.get(`${API_URL}/api/transactions:id=fjsd02r9fjasl392ff39jf`)
+    //     .catch(res => {
+    //       expect(res.status).toEqual(404);
+    //     });
+    // });
   });
 });

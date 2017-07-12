@@ -26,5 +26,16 @@ transactionRouter.get('/api/transactions:id', (req, res, next) => {
   Transaction.findById(req.params.id)
     .then(transaction => res.json(transaction))
     .catch(next);
+});
 
+transactionRouter.put('/api/transactions:id', jsonParser, (req, res, next) => {
+  console.log('Hit PUT /api/transactions/:id');
+
+  let options = {
+    runValidators: true,
+    new: true,
+  };
+  Transaction.findByIdAndUpdate(req.params.id, req.body, options)
+    .then(transaction => res.json(transaction))
+    .catch(next);
 });
