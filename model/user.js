@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
   username: {type: String, required: true, unique: true},
   passwordHash: {type: String, required: true, unique: true},
-  tokenSeed: {type: String, required: true, unique: true},
+  tokenSeed: {type: String, unique: true},
   email: {type: String, required: true},
   // profileId:{type: mongoose.Schema.Types.ObjectId, ref: 'profile'},
 });
@@ -61,6 +61,7 @@ userSchema.methods.tokenCreate = function(){
 const User = module.exports = mongoose.model('user', userSchema);
 
 User.create = function(data){
+  console.log('data.password', data.password);
   let password = data.password;
   delete data.password;
   return new User(data)
