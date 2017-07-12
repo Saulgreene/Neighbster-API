@@ -10,7 +10,7 @@ mockTool.createOne = () => {
   let result = {};
   return mockUser.createOne()
     .then(userData => {
-      result.user = userData.user;
+      result = userData;
       return new Tool({
         ownerId: result.user._id,
         serialNumber: 12345,

@@ -27,6 +27,7 @@ describe('Testing Tool model', () => {
   describe('Testing POST', () => {
     it('should return a tool and a 200 status', () => {
       return superagent.post(`${API_URL}/api/tools`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           ownerId: tempUserData.user._id,
           serialNumber: 67890,
@@ -47,6 +48,7 @@ describe('Testing Tool model', () => {
     });
     it('should respond with a 400 if no body provided', () => {
       return superagent.post(`${API_URL}/api/tools`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({})
         .catch(res => {
           expect(res.status).toEqual(400);
@@ -54,6 +56,7 @@ describe('Testing Tool model', () => {
     });
     it('should respond with a 400 if invalid body', () => {
       return superagent.post(`${API_URL}/api/tools`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           ownerId: 'not-an-id',
           serialNumber: 67890,
@@ -90,6 +93,7 @@ describe('Testing Tool model', () => {
   describe('Testing PUT', () => {
     it('should return an updated tool and a 200 status', () => {
       return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           toolDescription: 'updated-description',
         })
@@ -100,6 +104,7 @@ describe('Testing Tool model', () => {
     });
     it('should respond with a 400 if no body provided', () => {
       return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({})
         .catch(res => {
           expect(res.status).toEqual(400);
@@ -107,17 +112,20 @@ describe('Testing Tool model', () => {
     });
     it('should respond with a 400 if invalid body', () => {
       return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           serialNumber: 'not-a-number',
         })
         .then(res => {
           throw res;})
         .catch(res => {
+          console.log('lulwat', res.status);
           expect(res.status).toEqual(400);
         });
     });
     it('should respond with status 404 for tool.id not found', () => {
       superagent.put(`${API_URL}/api/tools/not-an-id`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           serialNumber: 54321,
         })
@@ -129,6 +137,7 @@ describe('Testing Tool model', () => {
   describe('Testing DELETE /api/tools', () => {
     it('should delete a tool and respond with a 204 status', () => {
       superagent.delete(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .then(res => {throw res;})
         .catch(res => {
           console.log();
@@ -137,6 +146,7 @@ describe('Testing Tool model', () => {
     });
     it('should respond with status 404 for tool.id not found', () => {
       superagent.delete(`${API_URL}/api/tools/not-an-id`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .catch(res => {
           expect(res.status).toEqual(404);
         });
