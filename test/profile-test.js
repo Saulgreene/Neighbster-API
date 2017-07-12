@@ -2,17 +2,19 @@
 
 const path = require('path');
 
-require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
+// require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
+require('dotenv').config({path: `${__dirname}/../.test.env`});
 
 const expect = require('expect');
 const superagent = require('superagent');
-const server = require('../lib/server.js');
 
-const API_URL = process.env.API_URL;
+require('./lib/mock-aws.js');
+const server = require('../lib/server.js');
 const clearDB = require('./lib/clear-db.js');
 const mockUser = require('./lib/mock-user.js');
 const mockProfile = require('./lib/mock-profile.js');
 
+const API_URL = process.env.API_URL;
 
 describe('Testing Profile Model', () =>{
   let tempUserData;
