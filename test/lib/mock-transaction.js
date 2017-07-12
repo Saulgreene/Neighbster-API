@@ -31,26 +31,5 @@ mockTransaction.createOne = () => {
           console.log('result after transaction', result);
           return result;
         });
-          // console.log('result after mockTool.createOne()', result);
-
-      // return mockTool.createOne()
-      // .then(toolData => {
-      //   result.tool = toolData.tool;
     });
-      // .save();
-      // .then(() => {
-        // return new Transaction({
-        //   borrowerId: result.borrower._id,
-        //   toolId: result.tool._id,
-        //   startDate: Date.now(),
-        //   endDate: Date.now(),
-        //   transactionDate: Date.now(),
-      //   })
-      //   .save();
-      // })
-      // .then(transaction => {
-      //   result.transaction = transaction;
-      //   return result;
-      // });
-
 };
