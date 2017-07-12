@@ -6,6 +6,7 @@ const jsonParser = require('body-parser').json();
 
 // app modules
 const Tool = require('../model/tool.js');
+const s3Upload = require('../lib/s3-upload-middleware.js');
 const basicAuth = require('../lib/basic-auth-middleware.js');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
@@ -13,12 +14,22 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 const toolRouter = module.exports = new Router();
 
 // /api/tools
-toolRouter.post('/api/tools', bearerAuth, jsonParser, (req, res, next) => {
+toolRouter.post('/api/tools', bearerAuth, s3Upload('image'), (req, res, next) => {
   console.log('Hit POST /api/tools');
 
-  new Tool(req.body)
+  new Tool({
+    ownerId: req.body.user._id.toString(),
+    serialNumber: req.body.serialNumber,
+    toolName: req.body.toolName,
+    toolDescription: req.body.toolDescription,
+    toolInstructions: req.body.toolInstructions,
+    picURI: req.s3Data.Location,
+    category: req.body.category,
+  })
     .save()
-    .then(tool => res.json(tool))
+    .then(tool => {
+      console.log('tool creted', tool);
+      res.json(tool);})
     .catch(next);
 });
 //
@@ -31,7 +42,6 @@ toolRouter.get('/api/tools/:id', (req, res, next) => {
 
 toolRouter.put('/api/tools/:id', bearerAuth, jsonParser, (req, res, next) => {
   console.log('Hit PUT /api/tools/:id');
-  console.log('req.user._id', req.user._id);
 
   let options = {
     runValidators: true,
@@ -46,7 +56,6 @@ toolRouter.put('/api/tools/:id', bearerAuth, jsonParser, (req, res, next) => {
       return tool;
     })
     .then(tool => {
-      console.log('hitting here');
       Tool.findByIdAndUpdate(req.params.id, req.body, options)
         .then(tool => res.json(tool))
         .catch(next);

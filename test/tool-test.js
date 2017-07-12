@@ -1,6 +1,6 @@
 'use strict';
 
-require('dotenv').config({path: `${__dirname}/../.test.env`});
+require('dotenv').config({path: `${__dirname}/../.env`});
 
 const expect = require('expect');
 const superagent = require('superagent');
@@ -25,17 +25,16 @@ describe('Testing Tool model', () => {
   afterEach(clearDB);
 
   describe('Testing POST', () => {
-    it('should return a tool and a 200 status', () => {
+    it.only('should return a tool and a 200 status', () => {
       return superagent.post(`${API_URL}/api/tools`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
-        .send({
-          ownerId: tempUserData.user._id,
-          serialNumber: 67890,
-          toolName: 'test-tool-2',
-          toolDescription: 'description-of-test-tool-2',
-          toolInstructions: 'instructions-for-test-tool-2',
-          category: 'auto',
-        })
+        .field('ownerId', 'not-an-id')
+        .field('serialNumber', 67890)
+        .field('toolName', 'test-tool-2')
+        .field('toolDescription', 'description-of-test-tool-2')
+        .field('toolInstructions', 'instructions-for-test-tool-2')
+        .field('category', 'auto')
+        .attach('image', `${__dirname}/test-assets/thor-hammer.jpeg`)
         .then(res => {
           expect(res.status).toEqual(200);
           expect(res.body.ownerId).toEqual(tempUserData.user._id.toString());
@@ -44,6 +43,7 @@ describe('Testing Tool model', () => {
           expect(res.body.toolDescription).toEqual('description-of-test-tool-2');
           expect(res.body.toolInstructions).toEqual('instructions-for-test-tool-2');
           expect(res.body.category).toEqual('auto');
+          expect(res.body.picURI).toExist();
         });
     });
     it('should respond with a 400 if no body provided', () => {
