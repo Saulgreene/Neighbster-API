@@ -2,6 +2,7 @@ db/
 build/
 .env
 .test.env
+.nyc.output
 
 ### OSX ###
 .DS_Store
@@ -139,4 +140,3 @@ Session.vim
 
 # auto-generated tag files
 tags
-

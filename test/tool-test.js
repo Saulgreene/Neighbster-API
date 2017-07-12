@@ -12,23 +12,23 @@ const mockUser = require('./lib/mock-user.js');
 const mockTool = require('./lib/mock-tool.js');
 
 describe('Testing Tool model', () => {
-  let tempUser;
+  let tempUserData;
 
   before(server.start);
   after(server.stop);
   beforeEach('create mockTool', () => {
     return mockTool.createOne()
       .then(userData => {
-        tempUser = userData;
+        tempUserData = userData;
       });
   });
   afterEach(clearDB);
 
   describe('Testing POST', () => {
-    it.only('should return a tool and a 200 status', () => {
+    it('should return a tool and a 200 status', () => {
       return superagent.post(`${API_URL}/api/tools`)
         .send({
-          ownerId: tempUser.user._id,
+          ownerId: tempUserData.user._id,
           serialNumber: 67890,
           toolName: 'test-tool-2',
           toolDescription: 'description-of-test-tool-2',
@@ -37,7 +37,7 @@ describe('Testing Tool model', () => {
         })
         .then(res => {
           expect(res.status).toEqual(200);
-          expect(res.body.ownerId).toEqual(tempUser.user._id.toString());
+          expect(res.body.ownerId).toEqual(tempUserData.user._id.toString());
           expect(res.body.serialNumber).toEqual(67890);
           expect(res.body.toolName).toEqual('test-tool-2');
           expect(res.body.toolDescription).toEqual('description-of-test-tool-2');
@@ -45,24 +45,27 @@ describe('Testing Tool model', () => {
           expect(res.body.category).toEqual('auto');
         });
     });
-    // it('should respond with a 400 if no body provided', () => {
-    //   return superagent.post(`${API_URL}/api/signup`)
-    //     .send({})
-    //     .catch(res => {
-    //       expect(res.status).toEqual(400);
-    //     });
-    // });
-    // it('should respond with a 400 if invalid body', () => {
-    //   return superagent.post(`${API_URL}/api/signup`)
-    //     .send({
-    //       username: '',
-    //       email: '',
-    //       password: '',
-    //     })
-    //     .catch(res => {
-    //       expect(res.status).toEqual(400);
-    //     });
-    // });
+    it('should respond with a 400 if no body provided', () => {
+      return superagent.post(`${API_URL}/api/tools`)
+        .send({})
+        .catch(res => {
+          expect(res.status).toEqual(400);
+        });
+    });
+    it.only('should respond with a 400 if invalid body', () => {
+      return superagent.post(`${API_URL}/api/tools`)
+        .send({
+          ownerId: 'not-an-id',
+          serialNumber: 67890,
+          toolName: 'test-tool-2',
+          toolDescription: 'description-of-test-tool-2',
+          toolInstructions: 'instructions-for-test-tool-2',
+          category: 'auto',
+        })
+        .catch(res => {
+          expect(res.status).toEqual(400);
+        });
+    });
     // it('should respond with a 409 if username already exists', () => {
     //   return mockUser.createOne()
     //     .then(userData => {
