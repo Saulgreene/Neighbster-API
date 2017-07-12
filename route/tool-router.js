@@ -28,6 +28,18 @@ toolRouter.get('/api/tools/:id', (req, res, next) => {
     .catch(next);
 });
 
+toolRouter.put('/api/tools/:id', jsonParser, (req, res, next) => {
+  console.log('Hit PUT /api/tools/:id');
+  let options = {
+    runValidators: true,
+    new: true,
+  };
+
+  Tool.findByIdAndUpdate(req.params.id, req.body, options)
+    .then(tool => res.json(tool))
+    .catch(next);
+});
+
 toolRouter.delete('/api/tools/:id', (req, res, next) => {
   console.log('Hit DELETE /api/tools/:id');
   Tool.findByIdAndRemove(req.params.id)

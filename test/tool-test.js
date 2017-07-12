@@ -87,6 +87,45 @@ describe('Testing Tool model', () => {
         });
     });
   });
+  describe('Testing PUT', () => {
+    it('should return an updated tool and a 200 status', () => {
+      return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .send({
+          toolDescription: 'updated-description',
+        })
+        .then(res => {
+          expect(res.status).toEqual(200);
+          expect(res.body.toolDescription).toEqual('updated-description');
+        });
+    });
+    it('should respond with a 400 if no body provided', () => {
+      return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .send({})
+        .catch(res => {
+          expect(res.status).toEqual(400);
+        });
+    });
+    it('should respond with a 400 if invalid body', () => {
+      return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .send({
+          serialNumber: 'not-a-number',
+        })
+        .then(res => {
+          throw res;})
+        .catch(res => {
+          expect(res.status).toEqual(400);
+        });
+    });
+    it('should respond with status 404 for tool.id not found', () => {
+      superagent.put(`${API_URL}/api/tools/not-an-id`)
+        .send({
+          serialNumber: 54321,
+        })
+        .catch(res => {
+          expect(res.status).toEqual(404);
+        });
+    });
+  });
   describe('Testing DELETE /api/tools', () => {
     it('should delete a tool and respond with a 204 status', () => {
       superagent.delete(`${API_URL}/api/tools/${tempUserData.tool._id}`)
@@ -96,7 +135,7 @@ describe('Testing Tool model', () => {
           expect(res.status).toEqual(204);
         });
     });
-    it.only('should respond with status 404 for tool.id not found', () => {
+    it('should respond with status 404 for tool.id not found', () => {
       superagent.delete(`${API_URL}/api/tools/not-an-id`)
         .catch(res => {
           expect(res.status).toEqual(404);
