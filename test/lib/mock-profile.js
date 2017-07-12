@@ -10,13 +10,24 @@ const mockProfile = module.exports = {};
 
 
 mockProfile.createOne = () => {
-  let tempUser;
-  return mockUser.createOne();
-  return new Profile({
-    address: faker.internet.userName(),
-    phone: faker.internet.userName(),
-    realName: faker.internet.userName(),
-    // picURI:
-    userId: tempUser._id,
-  });
+  let result ={};
+  return mockUser.createOne()
+    .then(userData => {
+      result = userData;
+      return new Profile({
+        address: 'address 12345',
+        phone: '123456789',
+        realName: 'mr real name',
+        // picURI:
+        userId: result.user._id,
+      })
+        .save();
+    })
+    .then(profile => {
+      // console.log('profile', profile);
+      // console.log('result.user._id', result.user._id);
+      result.profile = profile;
+      // console.log(' r ', result);
+      return result;
+    });
 };
