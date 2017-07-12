@@ -35,13 +35,16 @@ profileRouter.delete('/api/profile/:id', (req, res, next) => {
     .catch(next);
 });
 
-profileRouter.put('/api/profile/:id', (req, res, next) => {
+profileRouter.put('/api/profile/:id', jsonParser, (req, res, next) => {
   console.log('Hit PUT /api/profile');
   let options ={
-    runValidators: true,
+    // runValidators: true,
     new: true,
   };
-  return Profile.findByIdAndUpdate(req.params.id, req.body, options)
-    .then(profile => res.json(profile))
+  console.log(req.body);
+  return Profile.findOneAndUpdate(req.params.id, req.body, options)
+    .then(profile => {
+      res.json(profile);
+    })
     .catch(next);
 });

@@ -68,14 +68,6 @@ describe('Testing Profile Model', () =>{
   describe('Testing DELETE', () => {
     it('should delete a profile and return status 204', () => {
       console.log(tempUserData);
-      // return superagent.post(`${API_URL}/api/profile`)
-      //   .send({
-      //     address: '6208 57th ave south seattle WA 98118',
-      //     phone: '2533978733',
-      //     realName: 'Saul Greene',
-      //     picURI: 'some pic URI string',
-      //     userId: tempUserData._id,
-      //   });
       return superagent.delete(`${API_URL}/api/profile/${tempUserData._id}`)
         .then( res => {
           expect(res.status).toEqual(204);
@@ -91,21 +83,13 @@ describe('Testing Profile Model', () =>{
 
   describe('Testing PUT', () => {
     it('should respond with a 200 and modify the selected profile', () => {
-      // return superagent.post(`${API_URL}/api/profile`)
-      //   .send({
-      //     address: '6208 57th ave south seattle WA 98118',
-      //     phone: '2533978733',
-      //     realName: 'Saul Greene',
-      //     picURI: 'some pic URI string',
-      //     userId: tempUserData._id,
-      //   });
       return superagent.put(`${API_URL}/api/profile/${tempUserData._id}`)
         .send({
           realName: 'Josh Farber',
         })
         .then(res =>{
-          expect(res.status).toEqual(200);
           console.log(res.body);
+          expect(res.status).toEqual(200);
         });
     });
   });
