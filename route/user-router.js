@@ -16,7 +16,6 @@ userRouter.post('/api/signup', jsonParser, (req, res, next) => {
   console.log('Hit POST /api/signup');
   User.create(req.body)
     .then(token => {
-      console.log('token', token);
       res.send(token);})
     .catch(next);
 });
