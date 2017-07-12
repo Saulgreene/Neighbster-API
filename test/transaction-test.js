@@ -62,7 +62,6 @@ describe('Testing Transaction router', () => {
     });
     it('should respod with a 409 status', () => {
       return superagent.post(`${API_URL}/api/transactions`)
-        // .set('Authorization', `Bearer ${tempUserData.token}`)
         .send(tempUserData.transaction)
         .catch(res => {
           expect(res.status).toEqual(409);
@@ -93,8 +92,9 @@ describe('Testing Transaction router', () => {
   });
   describe('Testing PUT', () => {
     it.only('should return a transaction and a 200 status', () => {
-      // console.log('tempUserData.transaction._id', tempUserData.transaction._id);
+      console.log('tempUserData.transaction._id', tempUserData);
       return superagent.put(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           transactionDate: Date.now(),
         })
@@ -110,11 +110,5 @@ describe('Testing Transaction router', () => {
           expect(res.body.transactionDate !== tempUserData.transaction.transactionDate).toBeTruthy();
         });
     });
-    // it('should respond with a 404 not found', () => {
-    //   return superagent.get(`${API_URL}/api/transactions:id=fjsd02r9fjasl392ff39jf`)
-    //     .catch(res => {
-    //       expect(res.status).toEqual(404);
-    //     });
-    // });
   });
 });

@@ -12,6 +12,8 @@ mockTransaction.createOne = () => {
   return mockUser.createOne()
     .then(borrowerData => {
       result.borrower = borrowerData.user;
+      result.token = borrowerData.token;
+      result.password = borrowerData.password;
       // console.log('result after mockUser.createOne()', result);
       return mockTool.createOne()
         .then(toolData => {
