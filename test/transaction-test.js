@@ -91,7 +91,7 @@ describe('Testing Transaction router', () => {
     });
   });
   describe('Testing PUT', () => {
-    it.only('should return a transaction and a 200 status', () => {
+    it('should return a transaction and a 200 status', () => {
       console.log('tempUserData.transaction._id', tempUserData);
       return superagent.put(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
