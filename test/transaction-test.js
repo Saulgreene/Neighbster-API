@@ -56,13 +56,21 @@ describe('Testing Transaction router', () => {
         })
         .catch(res => {
           expect(res.status).toEqual(400);
-          // expect(res.body.borrowerId).toEqual(tempTransaction.borrower._id);
-          // expect(res.body.toolId).toEqual(tempTransaction.tool._id);
-          // expect(res.body.startDate).toExist();
-          // expect(res.body.endDate).toExist();
-          // expect(res.body.transactionDate).toExist();
         });
     });
+    // it('should respod with a 409 status', () => {
+    //   return superagent.post(`${API_URL}/api/transactions`)
+    //     .send({
+    //       // borrowerId: tempTransaction.borrower._id,
+    //       toolId: tempTransaction.tool._id,
+    //       startDate: Date.now(),
+    //       endDate: Date.now(),
+    //       transactionDate: Date.now(),
+    //     })
+    //     .catch(res => {
+    //       expect(res.status).toEqual(409);
+    //     });
+    // });
   });
   describe('Testing GET', () => {
     it('should return a transaction and a 200 status', () => {
