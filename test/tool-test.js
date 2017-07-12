@@ -52,7 +52,7 @@ describe('Testing Tool model', () => {
           expect(res.status).toEqual(400);
         });
     });
-    it.only('should respond with a 400 if invalid body', () => {
+    it('should respond with a 400 if invalid body', () => {
       return superagent.post(`${API_URL}/api/tools`)
         .send({
           ownerId: 'not-an-id',
@@ -66,52 +66,41 @@ describe('Testing Tool model', () => {
           expect(res.status).toEqual(400);
         });
     });
-    // it('should respond with a 409 if username already exists', () => {
-    //   return mockUser.createOne()
-    //     .then(userData => {
-    //       return userData.user.save();
-    //     })
-    //     .then(user => {
-    //       let tempUser = user;
-    //       return superagent.post(`${API_URL}/api/signup`)
-    //         .send({
-    //           username: tempUser.username,
-    //           password: 'secret2',
-    //           email: 'test2@email.com',
-    //         });
-    //     })
-    //     .then(res => {throw res;})
-    //     .catch(err => {
-    //       expect(err.response.status).toEqual(409);
-    //     });
-    // });
   });
-  // describe('Testing GET /api/signin', () => {
-  //   it('should return a token and a 200 status', () => {
-  //     let tempUser;
-  //     return mockUser.createOne()
-  //       .then(userData => {
-  //         tempUser = userData.user;
-  //         let encoded = new Buffer(`${tempUser.username}:${userData.password}`).toString('base64');
-  //         return superagent.get(`${API_URL}/api/signin`).set('Authorization', `Basic ${encoded}`);
-  //       })
-  //       .then(res => {
-  //         expect(res.status).toEqual(200);
-  //         expect(res.text).toExist();
-  //         expect(res.text.length > 1).toBeTruthy();
-  //       });
-  //   });
-  //   it('should respond with a status 401 for improperly formatted request', () => {
-  //     let tempUser;
-  //     return mockUser.createOne()
-  //       .then(userData => {
-  //         tempUser = userData.user;
-  //         let encoded = new Buffer(`${tempUser.username}:${userData.password}`).toString('base64');
-  //         return superagent.get(`${API_URL}/api/signin`);
-  //       })
-  //       .catch(res => {
-  //         expect(res.status).toEqual(401);
-  //       });
-  //   });
-  // });
+  describe('Testing GET /api/tools', () => {
+    it('should return a tool and a 200 status', () => {
+      superagent.get(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .then(res => {
+          expect(res.status).toEqual(200);
+          expect(res.body.ownerId).toEqual(tempUserData.user._id.toString());
+          expect(res.body.serialNumber).toEqual(tempUserData.tool.serialNumber);
+          expect(res.body.toolName).toEqual(tempUserData.tool.toolName);
+          expect(res.body.toolDescription).toEqual(tempUserData.tool.toolDescription);
+          expect(res.body.toolInstructions).toEqual(tempUserData.tool.toolInstructions);
+          expect(res.body.category).toEqual(tempUserData.tool.category);
+        });
+    });
+    it('should respond with status 404 for tool.id not found', () => {
+      superagent.get(`${API_URL}/api/tools/not-an-id`)
+        .catch(res => {
+          expect(res.status).toEqual(404);
+        });
+    });
+  });
+  describe('Testing DELETE /api/tools', () => {
+    it('should delete a tool and respond with a 204 status', () => {
+      superagent.delete(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .then(res => {throw res;})
+        .catch(res => {
+          console.log();
+          expect(res.status).toEqual(204);
+        });
+    });
+    it.only('should respond with status 404 for tool.id not found', () => {
+      superagent.delete(`${API_URL}/api/tools/not-an-id`)
+        .catch(res => {
+          expect(res.status).toEqual(404);
+        });
+    });
+  });
 }); // close final describe block
