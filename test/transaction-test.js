@@ -12,17 +12,38 @@ const mockTransaction = require('./lib/mock-transaction.js');
 
 describe('Testing Transaction router', () => {
 
-  let tempUser;
+  let tempTransaction;
 
   before(server.start);
   after(server.stop);
-  // beforeEach('create')
+  beforeEach('create mockTransaction', () => {
+    return mockTransaction.createOne()
+      .then(transactionData => {
+        tempTransaction = transactionData;
+      });
+  });
+
   afterEach(clearDB);
+  console.log('tempTransaction', tempTransaction);
 
   describe('Testing POST', () => {
-    it('should return a token and a 200 status', () => {
-      
-    })
-  })
-
-})
+    it.only('should return a transaction and a 200 status', () => {
+      return superagent.post(`${API_URL}/api/transactions`)
+        .send({
+          borrowerId: tempTransaction.borrower._id,
+          toolId: tempTransaction.tool._id,
+          startDate: Date.now(),
+          endDate: Date.now(),
+          transactionDate: Date.now(),
+        })
+        .then(res => {
+          expect(res.status).toEqual(200);
+          expect(res.body.borrowerId).toEqual(tempTransaction.borrower._id);
+          expect(res.body.toolId).toEqual(tempTransaction.tool._id);
+          expect(res.body.startDate).toExist();
+          expect(res.body.endDate).toExist();
+          expect(res.body.transactionDate).toExist();
+        });
+    });
+  });
+});

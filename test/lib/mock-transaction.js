@@ -2,23 +2,55 @@
 
 const faker = require('faker');
 const mockUser = require('./mock-user.js');
-
+const mockTool = require('./mock-tool.js');
 const Transaction = require('../../model/transaction.js');
 
 const mockTransaction = module.exports = {};
 
 mockTransaction.createOne = () => {
+  console.log('inside mockTransaction.createOne');
   let result = {};
-  // result.password = faker.internet.password();
   return mockUser.createOne()
-  .then(userData => {
-    result.user = userData.user;
-    return new Transaction({
-      borrowerId: result.user._id,
-      toolId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'tool'},
-      startDate: {type: Date, required: true},
-      endDate: {type: Date, required: true},
-      transactionDate: {type: Date, required: true}
-    })
-  });
+    .then(borrowerData => {
+      result.borrower = borrowerData.user;
+      console.log('result after mockUser.createOne()', result);
+      return mockTool.createOne()
+        .then(toolData => {
+          result.tool = toolData.tool;
+          console.log('result after mockTool.createOne()', result);
+          return new Transaction({
+            borrowerId: result.borrower._id,
+            toolId: result.tool._id,
+            startDate: Date.now(),
+            endDate: Date.now(),
+            transactionDate: Date.now(),
+          })
+            .save();
+        })
+        .then(transaction => {
+          result.transaction = transaction;
+          return result;
+        });
+          // console.log('result after mockTool.createOne()', result);
+
+      // return mockTool.createOne()
+      // .then(toolData => {
+      //   result.tool = toolData.tool;
+    });
+      // .save();
+      // .then(() => {
+        // return new Transaction({
+        //   borrowerId: result.borrower._id,
+        //   toolId: result.tool._id,
+        //   startDate: Date.now(),
+        //   endDate: Date.now(),
+        //   transactionDate: Date.now(),
+      //   })
+      //   .save();
+      // })
+      // .then(transaction => {
+      //   result.transaction = transaction;
+      //   return result;
+      // });
+
 };
