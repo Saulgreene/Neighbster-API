@@ -17,7 +17,7 @@ describe('testing server', () => {
   before(server.start);
   after(server.stop);
 
-  describe('testing server', () => {
+  describe('Testing Server', () => {
     it('should return 404 for non-existent route', () => {
       return superagent.get(`${API_URL}/api/not-a-route`)
         .then(res => {throw res;})

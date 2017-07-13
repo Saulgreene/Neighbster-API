@@ -11,6 +11,7 @@ const superagent = require('superagent');
 require('./lib/mock-aws.js');
 const server = require('../lib/server.js');
 const clearDB = require('./lib/clear-db.js');
+const mockUser = require('./lib/mock-user.js');
 const mockTransaction = require('./lib/mock-transaction.js');
 
 const API_URL = process.env.API_URL;
@@ -105,6 +106,23 @@ describe('Testing Transaction router', () => {
           expect(res.body._id).toEqual(tempUserData.transaction._id);
           expect(res.body.borrowerId).toEqual(tempUserData.borrower._id);
           expect(res.body.transactionDate !== tempUserData.transaction.transactionDate).toBeTruthy();
+        });
+    });
+    it('should respond with a 401 status because user cannot change another users transaction', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let putTestUserData = userData;
+          return superagent.put(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
+            .set('Authorization', `Bearer ${putTestUserData.token}`)
+            .send({
+              transactionDate: Date.now(),
+            })
+            .catch(res => {
+              expect(res.status).toEqual(401);
+            });
         });
     });
   });
