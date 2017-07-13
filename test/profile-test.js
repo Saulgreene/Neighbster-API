@@ -91,8 +91,23 @@ describe('Testing Profile Model', () =>{
     });
     it('should return status 401', () => {
       return superagent.delete(`${API_URL}/api/profile/${tempUserData.profile._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .catch( res => {
           expect(res.status).toEqual(401);
+        });
+    });
+    it('should return status 401 because user does not have permission to delete another users profile', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let deleteTestUserData = userData;
+          return superagent.delete(`${API_URL}/api/profile/${tempUserData.profile._id}`)
+            .set('Authorization', `Bearer ${deleteTestUserData.token}`)
+            .catch( res => {
+              expect(res.status).toEqual(401);
+            });
         });
     });
   });//end of DELETE describe block
@@ -106,6 +121,23 @@ describe('Testing Profile Model', () =>{
         })
         .then(res =>{
           expect(res.status).toEqual(200);
+        });
+    });
+    it('should respond with a 200 and modify the selected profile', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let putTestUserData = userData;
+          return superagent.put(`${API_URL}/api/profile/${tempUserData.profile._id}`)
+            .set('Authorization', `Bearer ${putTestUserData.token}`)
+            .send({
+              realName: 'Josh Farber',
+            })
+            .catch(res =>{
+              expect(res.status).toEqual(401);
+            });
         });
     });
     it('should respond with a status 400 Bad request', () => {

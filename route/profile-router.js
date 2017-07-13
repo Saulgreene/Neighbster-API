@@ -28,7 +28,7 @@ profileRouter.get('/api/profile/:id', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-profileRouter.delete('/api/profile/:id',bearerAuth, (req, res, next) => {
+profileRouter.delete('/api/profile/:id', bearerAuth, (req, res, next) => {
   console.log('Hit DELETE /api/profile');
   Profile.findById(req.params.id)
     .then(profile => {

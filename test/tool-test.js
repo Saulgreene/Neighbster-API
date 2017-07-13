@@ -129,6 +129,23 @@ describe('Testing Tool model', () => {
           expect(res.status).toEqual(400);
         });
     });
+    it('should respond with a 401 because user cannot update another users  tool', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let putTestUserData = userData;
+          return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+            .set('Authorization', `Bearer ${putTestUserData.token}`)
+            .send({
+              toolDescription: 'updated-description',
+            })
+            .catch(res => {
+              expect(res.status).toEqual(401);
+            });
+        });
+    });
     it('should respond with a 401 if no token provided', () => {
       return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
         .set('Authorization', `Bearer `)
