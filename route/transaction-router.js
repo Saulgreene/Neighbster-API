@@ -20,7 +20,7 @@ transactionRouter.post('/api/transactions', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-transactionRouter.get('/api/transactions:id', (req, res, next) => {
+transactionRouter.get('/api/transactions/:id', (req, res, next) => {
   console.log('Hit GET /api/transactions/:id');
 
   Transaction.findById(req.params.id)
@@ -28,7 +28,7 @@ transactionRouter.get('/api/transactions:id', (req, res, next) => {
     .catch(next);
 });
 
-transactionRouter.put('/api/transactions:id', bearerAuth, jsonParser, (req, res, next) => {
+transactionRouter.put('/api/transactions/:id', bearerAuth, jsonParser, (req, res, next) => {
   console.log('Hit PUT /api/transactions/:id');
 
   let options = {
