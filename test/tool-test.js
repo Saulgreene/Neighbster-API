@@ -2,8 +2,6 @@
 
 const path = require('path');
 
-console.log(path.resolve(__dirname, `../.env`));
-
 // require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
 require('dotenv').config({path: `${__dirname}/../.test.env`});
 
@@ -11,6 +9,7 @@ const expect = require('expect');
 const superagent = require('superagent');
 
 require('./lib/mock-aws.js');
+const User = require('../model/user.js');
 const server = require('../lib/server.js');
 const clearDB = require('./lib/clear-db.js');
 const mockUser = require('./lib/mock-user.js');
@@ -53,6 +52,20 @@ describe('Testing Tool model', () => {
           expect(res.body.picURI).toExist();
         });
     });
+    it('should respond with a 500 status for an improperly formatted attach', () => {
+      return superagent.post(`${API_URL}/api/tools`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
+        .field('ownerId', 'not-an-id')
+        .field('serialNumber', 67890)
+        .field('toolName', 'test-tool-2')
+        .field('toolDescription', 'description-of-test-tool-2')
+        .field('toolInstructions', 'instructions-for-test-tool-2')
+        .field('category', 'auto')
+        .attach('', `${__dirname}/test-assets/thor-hammer.jpeg`)
+        .catch(res => {
+          expect(res.status).toEqual(500);
+        });
+    });
     it('should respond with a 400 if no body provided', () => {
       return superagent.post(`${API_URL}/api/tools`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
@@ -79,7 +92,7 @@ describe('Testing Tool model', () => {
   });
   describe('Testing GET /api/tools', () => {
     it('should return a tool and a 200 status', () => {
-      superagent.get(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+      return superagent.get(`${API_URL}/api/tools/${tempUserData.tool._id}`)
         .then(res => {
           expect(res.status).toEqual(200);
           expect(res.body.ownerId).toEqual(tempUserData.user._id.toString());
@@ -91,7 +104,7 @@ describe('Testing Tool model', () => {
         });
     });
     it('should respond with status 404 for tool.id not found', () => {
-      superagent.get(`${API_URL}/api/tools/not-an-id`)
+      return superagent.get(`${API_URL}/api/tools/not-an-id`)
         .catch(res => {
           expect(res.status).toEqual(404);
         });
@@ -117,6 +130,31 @@ describe('Testing Tool model', () => {
           expect(res.status).toEqual(400);
         });
     });
+    it('should respond with a 401 because user cannot update another users  tool', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let putTestUserData = userData;
+          return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+            .set('Authorization', `Bearer ${putTestUserData.token}`)
+            .send({
+              toolDescription: 'updated-description',
+            })
+            .catch(res => {
+              expect(res.status).toEqual(401);
+            });
+        });
+    });
+    it('should respond with a 401 if no token provided', () => {
+      return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer `)
+        .send({})
+        .catch(res => {
+          expect(res.status).toEqual(401);
+        });
+    });
     it('should respond with a 400 if invalid body', () => {
       return superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
@@ -126,18 +164,27 @@ describe('Testing Tool model', () => {
         .then(res => {
           throw res;})
         .catch(res => {
-          console.log('lulwat', res.status);
           expect(res.status).toEqual(400);
         });
     });
     it('should respond with status 404 for tool.id not found', () => {
-      superagent.put(`${API_URL}/api/tools/not-an-id`)
+      return superagent.put(`${API_URL}/api/tools/not-an-id`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           serialNumber: 54321,
         })
+        .then(res => {throw res;})
         .catch(res => {
           expect(res.status).toEqual(404);
+        });
+    });
+    it('should respond with status 401 for user not found', () => {
+      superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
+        .then(res => {throw res;})
+        .catch(res => {
+          expect(res.status).toEqual(401);
+          expect(err.message).toEqual('unauthorized no user found');
         });
     });
   });
@@ -147,8 +194,22 @@ describe('Testing Tool model', () => {
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .then(res => {throw res;})
         .catch(res => {
-          console.log('hi', tempUserData.tool._id);
           expect(res.status).toEqual(204);
+        });
+    });
+    it('should respond with a 401 because user cannot delete another users tool', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let deleteTestUserData = userData;
+          return superagent.delete(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+            .set('Authorization', `Bearer ${deleteTestUserData.token}`)
+            .then(res => {throw res;})
+            .catch(res => {
+              expect(res.status).toEqual(401);
+            });
         });
     });
     it('should respond with status 404 for tool.id not found', () => {

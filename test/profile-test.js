@@ -23,7 +23,6 @@ describe('Testing Profile Model', () =>{
   beforeEach('create mockProfile', () =>{
     return mockProfile.createOne()
       .then(userData => {
-        // console.log('UserData', userData);
         tempUserData = userData;
       });
   });
@@ -32,7 +31,6 @@ describe('Testing Profile Model', () =>{
 
   describe('Testing POST', () => {
     it('should return a 200 status and a profile', () =>{
-      console.log('POST tempUserData', tempUserData);
       return superagent.post(`${API_URL}/api/profile`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
@@ -78,7 +76,6 @@ describe('Testing Profile Model', () =>{
 
   describe('Testing DELETE', () => {
     it('should delete a profile and return status 204', () => {
-      console.log(tempUserData);
       return superagent.delete(`${API_URL}/api/profile/${tempUserData.profile._id}`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .then( res => {
@@ -94,8 +91,23 @@ describe('Testing Profile Model', () =>{
     });
     it('should return status 401', () => {
       return superagent.delete(`${API_URL}/api/profile/${tempUserData.profile._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
         .catch( res => {
           expect(res.status).toEqual(401);
+        });
+    });
+    it('should return status 401 because user does not have permission to delete another users profile', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let deleteTestUserData = userData;
+          return superagent.delete(`${API_URL}/api/profile/${tempUserData.profile._id}`)
+            .set('Authorization', `Bearer ${deleteTestUserData.token}`)
+            .catch( res => {
+              expect(res.status).toEqual(401);
+            });
         });
     });
   });//end of DELETE describe block
@@ -108,9 +120,24 @@ describe('Testing Profile Model', () =>{
           realName: 'Josh Farber',
         })
         .then(res =>{
-          // console.log('res.body', res.body);
-          console.log('tempUserData.user._id', tempUserData.user._id);
           expect(res.status).toEqual(200);
+        });
+    });
+    it('should respond with a 200 and modify the selected profile', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let putTestUserData = userData;
+          return superagent.put(`${API_URL}/api/profile/${tempUserData.profile._id}`)
+            .set('Authorization', `Bearer ${putTestUserData.token}`)
+            .send({
+              realName: 'Josh Farber',
+            })
+            .catch(res =>{
+              expect(res.status).toEqual(401);
+            });
         });
     });
     it('should respond with a status 400 Bad request', () => {

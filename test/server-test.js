@@ -14,16 +14,19 @@ const server = require('../lib/server.js');
 const API_URL = process.env.API_URL;
 
 describe('testing server', () => {
-  before(server.start);
-  after(server.stop);
 
-  describe('testing server', () => {
+  describe('Testing Server', () => {
     it('should return 404 for non-existent route', () => {
+      server.start();
       return superagent.get(`${API_URL}/api/not-a-route`)
         .then(res => {throw res;})
         .catch(res => {
           expect(res.status).toEqual(404);
+          server.stop();
         });
+    });
+    it('should throw an error if server already down', () => {
+      server.stop();
     });
   });
 });

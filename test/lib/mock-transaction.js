@@ -14,11 +14,9 @@ mockTransaction.createOne = () => {
       result.borrower = borrowerData.user;
       result.token = borrowerData.token;
       result.password = borrowerData.password;
-      // console.log('result after mockUser.createOne()', result);
       return mockTool.createOne()
         .then(toolData => {
           result.tool = toolData.tool;
-          // console.log('result after mockTool.createOne()', result);
           return new Transaction({
             borrowerId: result.borrower._id,
             toolId: result.tool._id,
@@ -30,7 +28,6 @@ mockTransaction.createOne = () => {
         })
         .then(transaction => {
           result.transaction = transaction;
-          // console.log('result after transaction', result);
           return result;
         });
     });

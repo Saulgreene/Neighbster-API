@@ -28,7 +28,6 @@ toolRouter.post('/api/tools', bearerAuth, s3Upload('image'), (req, res, next) =>
   })
     .save()
     .then(tool => {
-      console.log('tool creted', tool);
       res.json(tool);})
     .catch(next);
 });
@@ -67,14 +66,12 @@ toolRouter.delete('/api/tools/:id', bearerAuth, (req, res, next) => {
   console.log('Hit DELETE /api/tools/:id');
   Tool.findById(req.params.id)
     .then(tool => {
-      console.log('hitting me!');
       if (req.user._id.toString() !== tool.ownerId.toString()){
         throw Error('Unauthorized - cannot change another users resource');
       }
       return tool;
     })
     .then(tool => {
-      console.log('over here!');
       Tool.findByIdAndRemove(req.params.id)
         .then(() => res.sendStatus(204))
         .catch(next);
