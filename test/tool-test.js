@@ -9,6 +9,7 @@ const expect = require('expect');
 const superagent = require('superagent');
 
 require('./lib/mock-aws.js');
+const User = require('../model/user.js');
 const server = require('../lib/server.js');
 const clearDB = require('./lib/clear-db.js');
 const mockUser = require('./lib/mock-user.js');
@@ -167,13 +168,23 @@ describe('Testing Tool model', () => {
         });
     });
     it('should respond with status 404 for tool.id not found', () => {
-      superagent.put(`${API_URL}/api/tools/not-an-id`)
+      return superagent.put(`${API_URL}/api/tools/not-an-id`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           serialNumber: 54321,
         })
+        .then(res => {throw res;})
         .catch(res => {
           expect(res.status).toEqual(404);
+        });
+    });
+    it('should respond with status 401 for user not found', () => {
+      superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+        .set('Authorization', `Bearer ${tempUserData.token}`)
+        .then(res => {throw res;})
+        .catch(res => {
+          expect(res.status).toEqual(401);
+          expect(err.message).toEqual('unauthorized no user found');
         });
     });
   });
