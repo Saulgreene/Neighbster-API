@@ -5,17 +5,25 @@ const {Router} = require('express');
 const jsonParser = require('body-parser').json();
 
 // app modules
-const bearerAuth = require('../lib/bearer-auth-middleware.js');
-const basicAuth = require('../lib/basic-auth-middleware.js');
 const Profile = require('../model/profile.js');
+const s3Upload = require('../lib/s3-upload-middleware.js');
+const basicAuth = require('../lib/basic-auth-middleware.js');
+const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 // module logic
 const profileRouter = module.exports = new Router();
 
 // /api/signup
-profileRouter.post('/api/profile',bearerAuth, jsonParser, (req, res, next) => {
+profileRouter.post('/api/profile',bearerAuth, jsonParser, s3Upload('image'), (req, res, next) => {
   console.log('Hit POST /api/profile');
-  Profile.create(req.body)
+  new Profile({
+    address: req.body.address,
+    phone: req.body.phone,
+    realName: req.body.realName,
+    picURI: req.s3Data.Location,
+    userId: req.user._id.toString(),
+  })
+    .save()
     .then(profile => {
       res.send(profile);})
     .catch(next);

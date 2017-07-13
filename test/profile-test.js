@@ -33,19 +33,16 @@ describe('Testing Profile Model', () =>{
     it('should return a 200 status and a profile', () =>{
       return superagent.post(`${API_URL}/api/profile`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
-        .send({
-          address: '6208 57th ave south seattle WA 98118',
-          phone: '2533978733',
-          realName: 'Saul Greene',
-          picURI: 'some pic URI string',
-          userId: tempUserData.user._id,
-        })
+        .field('address', '6208 57th ave south seattle WA 98118')
+        .field('phone', 2533978733)
+        .field('realName', 'Saul Greene')
+        .attach('image', `${__dirname}/test-assets/thor-hammer.jpeg`)
         .then(res => {
           expect(res.status).toEqual(200);
           expect(res.body.address).toEqual('6208 57th ave south seattle WA 98118');
           expect(res.body.phone).toEqual('2533978733');
           expect(res.body.realName).toEqual('Saul Greene');
-          expect(res.body.picURI).toEqual('some pic URI string');
+          expect(res.body.picURI).toExist();
           expect(res.body.userId).toEqual(tempUserData.user._id);
           expect(res.text.length > 1).toBeTruthy();
         });
