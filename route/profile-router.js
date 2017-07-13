@@ -14,7 +14,7 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 const profileRouter = module.exports = new Router();
 
 // /api/signup
-profileRouter.post('/api/profile',bearerAuth, jsonParser, s3Upload('image'), (req, res, next) => {
+profileRouter.post('/api/profile', bearerAuth, jsonParser, s3Upload('image'), (req, res, next) => {
   console.log('Hit POST /api/profile');
   new Profile({
     address: req.body.address,
