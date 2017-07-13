@@ -52,7 +52,7 @@ describe('Testing Tool model', () => {
           expect(res.body.picURI).toExist();
         });
     });
-    it('should respond with a 500 status for an improperly formatted attach', () => {
+    it('should respond with a 400 status for an improperly formatted attach', () => {
       return superagent.post(`${API_URL}/api/tools`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .field('ownerId', 'not-an-id')
@@ -63,7 +63,7 @@ describe('Testing Tool model', () => {
         .field('category', 'auto')
         .attach('', `${__dirname}/test-assets/thor-hammer.jpeg`)
         .catch(res => {
-          expect(res.status).toEqual(500);
+          expect(res.status).toEqual(400);
         });
     });
     it('should respond with a 400 if no body provided', () => {
