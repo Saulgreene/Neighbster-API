@@ -102,5 +102,41 @@ describe('Testing User model', () => {
           expect(res.status).toEqual(401);
         });
     });
+    it('should respond with 401 status for no Basic Auth', () => {
+      let tempUser;
+      return mockUser.createOne()
+        .then(userData => {
+          tempUser = userData.user;
+          let encoded = new Buffer(`${tempUser.username}:${userData.password}`).toString('base64');
+          return superagent.get(`${API_URL}/api/signin`).set('Authorization', `Basic`);
+        })
+        .catch(res => {
+          expect(res.status).toEqual(401);
+        });
+    });
+    it('should respond with 401 status for no password or username', () => {
+      let tempUser;
+      return mockUser.createOne()
+        .then(userData => {
+          tempUser = userData.user;
+          let encoded = new Buffer(`${userData.password}`).toString('base64');
+          return superagent.get(`${API_URL}/api/signin`).set('Authorization', `Basic ${encoded}`);
+        })
+        .catch(res => {
+          expect(res.status).toEqual(401);
+        });
+    });
+    it('should respond with 401 status for username not found', () => {
+      let tempUser;
+      return mockUser.createOne()
+        .then(userData => {
+          tempUser = userData.user;
+          let encoded = new Buffer(`not-a-username:${userData.password}`).toString('base64');
+          return superagent.get(`${API_URL}/api/signin`).set('Authorization', `Basic ${encoded}`);
+        })
+        .catch(res => {
+          expect(res.status).toEqual(401);
+        });
+    });
   });
 }); // close final describe block
