@@ -14,7 +14,7 @@ const server = require('../lib/server.js');
 const API_URL = process.env.API_URL;
 
 describe('testing server', () => {
-
+  after(server.stop);
   describe('Testing Server', () => {
     it('should return 404 for non-existent route', () => {
       server.start();
@@ -25,8 +25,15 @@ describe('testing server', () => {
           server.stop();
         });
     });
-    it('should throw an error if server already down', () => {
+    it('should throw an error if server already down', (done) => {
+      server.isOn = false;
       server.stop();
+      done();
+    });
+    it('should throw an error if server already down', (done) => {
+      server.isOn = true;
+      server.start();
+      done();
     });
   });
 });

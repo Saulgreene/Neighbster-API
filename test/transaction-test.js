@@ -72,7 +72,7 @@ describe('Testing Transaction router', () => {
   });
   describe('Testing GET', () => {
     it('should return a transaction and a 200 status', () => {
-      return superagent.get(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
+      return superagent.get(`${API_URL}/api/transactions/${tempUserData.transaction._id}`)
         .then(res => {
           expect(res.status).toEqual(200);
           expect(res.body._id).toEqual(tempUserData.transaction._id);
@@ -92,7 +92,7 @@ describe('Testing Transaction router', () => {
   });
   describe('Testing PUT', () => {
     it('should return a transaction and a 200 status', () => {
-      return superagent.put(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
+      return superagent.put(`${API_URL}/api/transactions/${tempUserData.transaction._id}`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
           transactionDate: Date.now(),
@@ -114,7 +114,7 @@ describe('Testing Transaction router', () => {
         })
         .then(userData => {
           let putTestUserData = userData;
-          return superagent.put(`${API_URL}/api/transactions${tempUserData.transaction._id}`)
+          return superagent.put(`${API_URL}/api/transactions/${tempUserData.transaction._id}`)
             .set('Authorization', `Bearer ${putTestUserData.token}`)
             .send({
               transactionDate: Date.now(),
