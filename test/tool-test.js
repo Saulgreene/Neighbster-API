@@ -186,6 +186,21 @@ describe('Testing Tool model', () => {
           expect(res.status).toEqual(204);
         });
     });
+    it('should respond with a 401 because user cannot delete another users tool', () => {
+      return mockUser.createOne()
+        .then(userData => {
+          return userData;
+        })
+        .then(userData => {
+          let deleteTestUserData = userData;
+          return superagent.delete(`${API_URL}/api/tools/${tempUserData.tool._id}`)
+            .set('Authorization', `Bearer ${deleteTestUserData.token}`)
+            .then(res => {throw res;})
+            .catch(res => {
+              expect(res.status).toEqual(401);
+            });
+        });
+    });
     it('should respond with status 404 for tool.id not found', () => {
       return superagent.delete(`${API_URL}/api/tools/not-an-id`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
