@@ -24,10 +24,7 @@ mockProfile.createOne = () => {
         .save();
     })
     .then(profile => {
-      // console.log('profile', profile);
-      // console.log('result.user._id', result.user._id);
       result.profile = profile;
-      // console.log(' r ', result);
       return result;
     });
 };

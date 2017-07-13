@@ -44,7 +44,6 @@ transactionRouter.put('/api/transactions:id', bearerAuth, jsonParser, (req, res,
       return transaction;
     })
     .then(transaction => {
-      console.log('hitting here');
       Transaction.findByIdAndUpdate(req.params.id, req.body, options)
         .then(transaction => res.json(transaction))
         .catch(next);

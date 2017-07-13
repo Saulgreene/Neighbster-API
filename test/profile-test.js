@@ -23,7 +23,6 @@ describe('Testing Profile Model', () =>{
   beforeEach('create mockProfile', () =>{
     return mockProfile.createOne()
       .then(userData => {
-        // console.log('UserData', userData);
         tempUserData = userData;
       });
   });
@@ -32,7 +31,6 @@ describe('Testing Profile Model', () =>{
 
   describe('Testing POST', () => {
     it('should return a 200 status and a profile', () =>{
-      console.log('POST tempUserData', tempUserData);
       return superagent.post(`${API_URL}/api/profile`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .send({
@@ -78,7 +76,6 @@ describe('Testing Profile Model', () =>{
 
   describe('Testing DELETE', () => {
     it('should delete a profile and return status 204', () => {
-      console.log(tempUserData);
       return superagent.delete(`${API_URL}/api/profile/${tempUserData.profile._id}`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .then( res => {
@@ -108,8 +105,6 @@ describe('Testing Profile Model', () =>{
           realName: 'Josh Farber',
         })
         .then(res =>{
-          // console.log('res.body', res.body);
-          console.log('tempUserData.user._id', tempUserData.user._id);
           expect(res.status).toEqual(200);
         });
     });

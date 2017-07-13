@@ -17,7 +17,6 @@ profileRouter.post('/api/profile',bearerAuth, jsonParser, (req, res, next) => {
   console.log('Hit POST /api/profile');
   Profile.create(req.body)
     .then(profile => {
-      console.log('profile', profile);
       res.send(profile);})
     .catch(next);
 });
@@ -34,8 +33,6 @@ profileRouter.delete('/api/profile/:id',bearerAuth, (req, res, next) => {
   Profile.findById(req.params.id)
     .then(profile => {
       if(req.user._id.toString() !== profile.userId.toString()){
-        console.log(req.params.id);
-        console.log('profile in findById', profile);
         throw Error('Unauthorized cannot change another users profile');
       }
       return profile;
@@ -56,14 +53,11 @@ profileRouter.put('/api/profile/:id',bearerAuth, jsonParser, (req, res, next) =>
   Profile.findById(req.params.id)
     .then(profile => {
       if(req.user._id.toString() !== profile.userId.toString()){
-        console.log(req.params.id);
-        console.log('profile in findById', profile);
         throw Error('Unauthorized cannot change another users profile');
       }
       return profile;
     })
     .then(profile => {
-      // console.log('profile returned', profile);
       Profile.findOneAndUpdate(req.params.id, req.body, options)
         .then(profile => res.json(profile))
         .catch(next);
