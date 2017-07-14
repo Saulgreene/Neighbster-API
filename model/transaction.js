@@ -7,7 +7,7 @@ const transactionSchema = mongoose.Schema({
   toolId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'tool'},
   startDate: {type: Date, required: true},
   endDate: {type: Date, required: true},
-  transactionDate: {type: Date, required: true},
+  transactionDate: {type: Date, required: true, default: Date.now()},
 });
 
 module.exports = mongoose.model('transaction', transactionSchema);

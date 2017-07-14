@@ -2,7 +2,6 @@
 
 const path = require('path');
 
-// require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
 require('dotenv').config({path: `${__dirname}/../.test.env`});
 
 const expect = require('expect');
@@ -34,13 +33,13 @@ describe('Testing Profile Model', () =>{
       return superagent.post(`${API_URL}/api/profile`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .field('address', '6208 57th ave south seattle WA 98118')
-        .field('phone', 2533978733)
+        .field('phone', '253-397-8733')
         .field('realName', 'Saul Greene')
         .attach('image', `${__dirname}/test-assets/thor-hammer.jpeg`)
         .then(res => {
           expect(res.status).toEqual(200);
           expect(res.body.address).toEqual('6208 57th ave south seattle WA 98118');
-          expect(res.body.phone).toEqual('2533978733');
+          expect(res.body.phone).toEqual('253-397-8733');
           expect(res.body.realName).toEqual('Saul Greene');
           expect(res.body.picURI).toExist();
           expect(res.body.userId).toEqual(tempUserData.user._id);
