@@ -2,7 +2,6 @@
 
 const path = require('path');
 
-// require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
 require('dotenv').config({path: `${__dirname}/../.test.env`});
 
 const expect = require('expect');
@@ -179,6 +178,7 @@ describe('Testing Tool model', () => {
         });
     });
     it('should respond with status 401 for user not found', () => {
+      //unreturned promise below is intentional to spoof 'no user found' without triggering 'no token'.
       superagent.put(`${API_URL}/api/tools/${tempUserData.tool._id}`)
         .set('Authorization', `Bearer ${tempUserData.token}`)
         .then(res => {throw res;})

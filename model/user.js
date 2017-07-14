@@ -9,7 +9,6 @@ const userSchema = mongoose.Schema({
   passwordHash: {type: String, required: true, unique: true},
   tokenSeed: {type: String, unique: true},
   email: {type: String, required: true},
-  // profileId:{type: mongoose.Schema.Types.ObjectId, ref: 'profile'},
 });
 
 userSchema.methods.passwordHashCreate = function(password){
@@ -38,10 +37,7 @@ userSchema.methods.tokenSeedCreate = function(){
       this.save()
         .then(() => resolve(this))
         .catch(err => {
-          // if(!err.message.includes(this.tokenSeed))
-          //   return reject(err);
           if(tries < 1)
-            // return reject(new Error('server failed to create tokenSeed'));
             return reject(err);
           tries--;
           _tokenSeedCreate();

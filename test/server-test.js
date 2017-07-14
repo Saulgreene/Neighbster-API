@@ -2,7 +2,6 @@
 
 const path = require('path');
 
-// require('dotenv').config({path: path.resolve(__dirname, `../.env`)});
 require('dotenv').config({path: `${__dirname}/../.test.env`});
 
 const expect = require('expect');
@@ -34,6 +33,20 @@ describe('testing server', () => {
       server.isOn = true;
       server.start();
       done();
+    });
+  });
+});
+
+describe('testing error-handler 500 response', () => {
+  before(server.start);
+  after(server.stop);
+  describe('Testing Error-Handler', () => {
+    it('should return 500 for server error', (done) => {
+      superagent.get(`${API_URL}/api/500test`)
+        .end((err, res) => {
+          expect(res.status).toEqual(500);
+          done();
+        });
     });
   });
 });

@@ -5,8 +5,10 @@ const {Router} = require('express');
 const jsonParser = require('body-parser').json();
 
 // app modules
-const basicAuth = require('../lib/basic-auth-middleware.js');
 const User = require('../model/user.js');
+const errorHandler = require('../lib/error-middleware.js');
+const basicAuth = require('../lib/basic-auth-middleware.js');
+
 
 // module logic
 const userRouter = module.exports = new Router();
@@ -25,4 +27,9 @@ userRouter.get('/api/signin', basicAuth, (req, res, next) => {
   req.user.tokenCreate()
     .then(token => res.send(token))
     .catch(next);
+});
+
+userRouter.get('/api/500test', (req, res, next) => {
+  console.log('Hit /api/500test');
+  return errorHandler(new Error('fake-error'), req, res, next);
 });
