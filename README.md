@@ -259,11 +259,11 @@
 
 # About Us
 
-## Saul Greene
+## Saul Greene <img src="assets/saul.png" width="50" height="50" alt="Computer Hope">  
   My name is Saul Greene, I am a full stack Java Developer who with interest in the front end and design aspect of web development. I love to see visual products of my work and cannot wait to make a front end to this API!
 
-## Matthew Parker  
+## Matthew Parker <img src="assets/Me.jpg" width="50" height="50" alt="Computer Hope">  
   Hi, I'm Matthew! I'm a writer, specializing in fantasy fiction and JavaScript (sometimes the same thing). I like working on creative applications that improve peoples' lives, if even in little ways. I hope you enjoy our API!
 
-## Derek Farmer
+## Derek Farmer <img src="assets/derek.png" width="50" height="50" alt="Computer Hope">
   Derek is a graduate of Seattle University’s School of Theology and Ministry. He spent a year in Rome studying at the Pontifical University of St. Thomas Aquinas. Later, Derek was an intelligence officer in the US Navy, stationed globally aboard the USS Monterey (CG-61). He was Field Director for Mike McGinn’s 2009 campaign for Mayor of Seattle and spent two years working for at City Hall in constituent relations. He managed the Food and Faith Initiative for Tilth Alliance, which seeks to help faith communities build vegetable gardens on their properties.
